@@ -28,7 +28,6 @@ const postModal = ({ open, onClose }) => {
         let formdata = new FormData();
         formdata.append("caption", data.caption);
     
-        // Convert single file to an array or keep as array if multiple files
         const files = Array.isArray(data.postImages)
             ? data.postImages
             : data.postImages ? [data.postImages] : [];

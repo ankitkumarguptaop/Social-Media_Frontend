@@ -1,4 +1,4 @@
-"use client";
+
 import { createSlice } from "@reduxjs/toolkit";
 import {
   createPost,
@@ -49,6 +49,8 @@ export const postSlice = createSlice({
       })
       .addCase(listPost.fulfilled, (state, action) => {
         state.isLoading = false;
+        state.posts = action.payload;
+        console.log('✌️action.payload --->');
       })
       .addCase(listPost.rejected, (state, action) => {
         state.isLoading = false;
@@ -59,6 +61,9 @@ export const postSlice = createSlice({
       })
       .addCase(listUserPost.fulfilled, (state, action) => {
         state.isLoading = false;
+        state.posts = action.payload;
+        console.log('✌️action.payload --->', action.payload);
+
       })
       .addCase(listUserPost.rejected, (state, action) => {
         state.isLoading = false;

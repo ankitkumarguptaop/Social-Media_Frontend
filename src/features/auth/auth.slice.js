@@ -46,6 +46,8 @@ export const authUserSlice = createSlice({
         });
         state.isLoading = false;
 
+        redirect("/home")
+
       })
       .addCase(signInUser.rejected, (state, action) => {
         state.isLoading = false;

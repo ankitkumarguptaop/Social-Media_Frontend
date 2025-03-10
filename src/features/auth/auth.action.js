@@ -5,15 +5,15 @@ import {
 } from "../../services/auth.service";
 import { SIGNIN, SIGNUP } from "./auth.type";
 
-export const signUpUser = createAsyncThunk(SIGNUP, async (signupData) => {
-  const res = await signupUserService(signupData);
+export const signUpUser = createAsyncThunk(SIGNUP, async (signUpData) => {
+  const res = await signupUserService(signUpData);
   const data = res.data;
   console.log("res data", data);
   return data;
 });
 
-export const signInUser = createAsyncThunk(SIGNIN, async (signinData) => {
-  const res = await signinUserService(signinData);
+export const signInUser = createAsyncThunk(SIGNIN, async (signIndata) => {
+  const res = await signinUserService(signIndata);
   const data = res.data;
   console.log("res data", data);
   return res;

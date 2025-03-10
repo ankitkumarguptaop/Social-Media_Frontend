@@ -1,0 +1,23 @@
+.container {
+  height: 100vh;
+  width: 100vw;
+  background-color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.auth-container {
+  width: 410px;
+  height: 812px;
+  border: 1px solid grey;
+}
+
+.insta-logo {
+  height: 200px;
+  width:90%;
+  background-image: url("../assets/images/instagram-logo.png");
+  background-size:  182px 49px ,cover;
+  background-repeat: no-repeat;
+  background-position: 57% 80% ;
+}

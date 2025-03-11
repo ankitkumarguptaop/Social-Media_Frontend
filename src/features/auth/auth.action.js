@@ -16,5 +16,5 @@ export const signInUser = createAsyncThunk(SIGNIN, async (signIndata) => {
   const res = await signinUserService(signIndata);
   const data = res.data;
   console.log("res data", data);
-  return res;
+  return data;
 });

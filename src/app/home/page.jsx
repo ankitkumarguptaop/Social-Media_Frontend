@@ -1,8 +1,15 @@
-
 "use client";
 import React, { useEffect, useState } from "react";
 import styles from "./home.module.css";
-import { Avatar, Box, IconButton, Typography, Fab } from "@mui/material";
+import {
+  Avatar,
+  Box,
+  IconButton,
+  Typography,
+  Fab,
+  ButtonGroup,
+  Button,
+} from "@mui/material";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import CameraAltIcon from "@mui/icons-material/CameraAlt";
 import TvIcon from "@mui/icons-material/Tv";
@@ -11,14 +18,27 @@ import { useDispatch, useSelector } from "react-redux";
 import { listPost } from "@/features/post/post.action";
 import CreatePostModal from "@/components/create-post-modal/modal";
 
+import Post from "@/components/post-card/post";
 const Home = () => {
   const dispatch = useDispatch();
   const posts = useSelector((state) => state.post.posts);
-console.log('✌️posts --->', posts);
+  console.log("✌️posts --->", posts.rows);
+  const currentUser = useSelector((state) => state.auth.currentUser);
+  const allPostLikes = useSelector((state) => state.like.postLikes);
+  console.log("✌️allPostLikes --->", allPostLikes);
+  console.log("✌️currentUser --->", currentUser);
+
+  const [profilePicture, setProfilePicture] = useState(
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/${currentUser?.profileImage?.image_url}`
+      .replace(/ /g, "%20")
+      .replace(/\\/g, "/")
+  );
+
+  console.log("✌️posts --->", profilePicture);
   const [openCreateModal, setOpenCreateModal] = useState(false);
 
   useEffect(() => {
-    dispatch(listPost());
+    dispatch(listPost({ page: 1, limit: 155 }));
   }, []);
 
   const handleOpenCreateModal = () => setOpenCreateModal(true);
@@ -26,7 +46,6 @@ console.log('✌️posts --->', posts);
 
   return (
     <Box className={styles["home-container"]}>
-
       <Box className={styles["header"]}>
         <IconButton>
           <CameraAltIcon />
@@ -53,7 +72,7 @@ console.log('✌️posts --->', posts);
           <Box key={index} className={styles["avatar-item"]}>
             <Avatar
               alt={`Story ${index + 1}`}
-              src={`/static/images/avatar/${(index % 5) + 1}.jpg`}
+              src={`/static/.jpg`}
               sx={{
                 width: 64,
                 height: 64,
@@ -66,65 +85,14 @@ console.log('✌️posts --->', posts);
       </Box>
 
       <Box className={styles["posts"]}>
-  {posts.map((post) => (
-    <Box key={post.id}>
-      {/* Post Header */}
-      <Box className={styles["post-description"]}>
-        <Avatar
-          alt="User"
-          src="/static/images/avatar/1.jpg"
-          sx={{ width: 40, height: 40, marginRight: 1 }}
-        />
-        <Typography fontWeight="bold">username_{post.user_id}</Typography>
+        {posts?.rows?.map((post) => {
+          const likes = allPostLikes.filter(
+            (like) => like?.like?.postId === post?.id
+          );
+          console.log("✌️likes ddd--->", likes);
+          return <Post key={post.id} post={post} likes={likes}></Post>;
+        })}
       </Box>
-
-      {/* Post Images */}
-      {post.images.map((image) => (
-        <Box
-          key={image.id}
-          component="img"
-          src={`${process.env.NEXT_PUBLIC_BACKEND_URL}/${image.image_url.replace(/\\/g, "/")}`}
-          alt="Post"
-          sx={{
-            width: "100%",
-            height: 400,
-            objectFit: "cover",
-            marginTop: 1,
-          }}
-        />
-      ))}
-
-      {/* Post Interaction */}
-      <Box className={styles["post-interaction"]}>
-        <Box>
-          <IconButton>
-            <i className="fas fa-heart"></i>
-          </IconButton>
-          <IconButton>
-            <i className="fas fa-comment"></i>
-          </IconButton>
-          <IconButton>
-            <SendIcon />
-          </IconButton>
-        </Box>
-        <IconButton>
-          <i className="far fa-bookmark"></i>
-        </IconButton>
-      </Box>
-
-      {/* Post Caption */}
-      <Box sx={{ padding: "0 16px" }}>
-        <Typography variant="body2">
-          <strong>username_{post.user_id}</strong> {post.caption}
-        </Typography>
-        <Typography variant="caption" color="text.secondary">
-          {new Date(post.createdAt).toLocaleString()}
-        </Typography>
-      </Box>
-    </Box>
-  ))}
-</Box>
-
 
       <Box className={styles["footer"]}>
         <IconButton>
@@ -150,13 +118,12 @@ console.log('✌️posts --->', posts);
         <IconButton>
           <Avatar
             alt="Profile"
-            src="/static/images/avatar/1.jpg"
+            src={profilePicture}
             sx={{ width: 28, height: 28 }}
           />
         </IconButton>
       </Box>
 
-    
       <CreatePostModal
         open={openCreateModal}
         onClose={handleCloseCreateModal}

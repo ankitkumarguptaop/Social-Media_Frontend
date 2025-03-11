@@ -1,4 +1,3 @@
-
 import { createSlice } from "@reduxjs/toolkit";
 import {
   createPost,
@@ -6,6 +5,7 @@ import {
   updatePost,
   listPost,
   listUserPost,
+
 } from "./post.action";
 
 const initialState = {
@@ -48,9 +48,8 @@ export const postSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(listPost.fulfilled, (state, action) => {
+        state.posts = action.payload.post;
         state.isLoading = false;
-        state.posts = action.payload;
-        console.log('✌️action.payload --->');
       })
       .addCase(listPost.rejected, (state, action) => {
         state.isLoading = false;
@@ -62,8 +61,7 @@ export const postSlice = createSlice({
       .addCase(listUserPost.fulfilled, (state, action) => {
         state.isLoading = false;
         state.posts = action.payload;
-        console.log('✌️action.payload --->', action.payload);
-
+        console.log("✌️action.payload --->", action.payload);
       })
       .addCase(listUserPost.rejected, (state, action) => {
         state.isLoading = false;

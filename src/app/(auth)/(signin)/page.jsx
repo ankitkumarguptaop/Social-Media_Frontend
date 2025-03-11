@@ -44,9 +44,14 @@ const SignIn = () => {
 
   const onSubmit = async (data) => {
     console.log(data);
-    dispatch(signInUser({ email: data.email, password: data.password }));
+   dispatch(
+      signInUser({ email: data.email, password: data.password })
+    ).then((res) => {
+      if (res.meta.requestStatus === "fulfilled") {
+        redirect("/home");
+      }
+    });
     reset();
-
   };
 
   return (

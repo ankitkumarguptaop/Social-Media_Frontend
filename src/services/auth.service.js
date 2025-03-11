@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export const signupUserService = async (data) =>{
-  await axios.post(
+  return await axios.post(
     `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/signup`,
     data,
   );

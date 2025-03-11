@@ -39,6 +39,7 @@ export const likeSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(addlikeOnPost.fulfilled, (state, action) => {
+        state.postLikes=[...state.postLikes ,  action.payload]
         state.isLoading = false;
       })
       .addCase(addlikeOnPost.rejected, (state, action) => {

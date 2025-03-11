@@ -7,8 +7,6 @@ import {
   IconButton,
   Typography,
   Fab,
-  ButtonGroup,
-  Button,
 } from "@mui/material";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import CameraAltIcon from "@mui/icons-material/CameraAlt";
@@ -17,16 +15,14 @@ import SendIcon from "@mui/icons-material/Send";
 import { useDispatch, useSelector } from "react-redux";
 import { listPost } from "@/features/post/post.action";
 import CreatePostModal from "@/components/create-post-modal/modal";
-
 import Post from "@/components/post-card/post";
+import InfiniteScroll from "react-infinite-scroll-component";
+
 const Home = () => {
   const dispatch = useDispatch();
   const posts = useSelector((state) => state.post.posts);
-  console.log("✌️posts --->", posts.rows);
   const currentUser = useSelector((state) => state.auth.currentUser);
   const allPostLikes = useSelector((state) => state.like.postLikes);
-  console.log("✌️allPostLikes --->", allPostLikes);
-  console.log("✌️currentUser --->", currentUser);
 
   const [profilePicture, setProfilePicture] = useState(
     `${process.env.NEXT_PUBLIC_BACKEND_URL}/${currentUser?.profileImage?.image_url}`
@@ -34,27 +30,38 @@ const Home = () => {
       .replace(/\\/g, "/")
   );
 
-  console.log("✌️posts --->", profilePicture);
   const [openCreateModal, setOpenCreateModal] = useState(false);
+  const [page, setPage] = useState(1);
+  const [limit] = useState(2);
+  const [hasMore, setHasMore] = useState(true);
+  console.log('✌️hasMore --->', hasMore);
 
   useEffect(() => {
-    dispatch(listPost({ page: 1, limit: 155 }));
+    fetchMoreData();
   }, []);
+
+  const fetchMoreData = async () => {
+    dispatch(listPost({ page, limit })).then((result) => {
+      if (result?.payload?.post?.rows?.length < limit) {
+        setHasMore(false);
+      }
+    });
+
+    setPage(prev => prev + 1);
+  };
 
   const handleOpenCreateModal = () => setOpenCreateModal(true);
   const handleCloseCreateModal = () => setOpenCreateModal(false);
 
   return (
+
     <Box className={styles["home-container"]}>
+      {/* Header */}
       <Box className={styles["header"]}>
         <IconButton>
           <CameraAltIcon />
         </IconButton>
-        <Typography
-          variant="h6"
-          fontWeight="bold"
-          sx={{ fontFamily: "Arial, sans-serif" }}
-        >
+        <Typography variant="h6" fontWeight="bold">
           Instagram
         </Typography>
         <Box>
@@ -67,32 +74,59 @@ const Home = () => {
         </Box>
       </Box>
 
-      <Box className={styles["avatars"]}>
-        {[...Array(10)].map((_, index) => (
-          <Box key={index} className={styles["avatar-item"]}>
-            <Avatar
-              alt={`Story ${index + 1}`}
-              src={`/static/.jpg`}
-              sx={{
-                width: 64,
-                height: 64,
-                border: "2px solid #e1306c",
-                cursor: "pointer",
-              }}
-            />
-          </Box>
-        ))}
-      </Box>
+      <InfiniteScroll
+        dataLength={posts?.rows?.length || 0}
+        next={fetchMoreData}
+        hasMore={hasMore}
+        loader={<Box style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          marginTop: '16px'
+        }}>
+          Loading more posts...
+        </Box>}
+        endMessage={<Box style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          marginTop: '16px'
+        }}>
+          No more posts to show
+        </Box>}
+      >
+        <Box className={styles["avatars"]}>
+          {[...Array(10)].map((_, index) => (
+            <Box key={index} className={styles["avatar-item"]}>
+              <Avatar
+                alt={`Story ${index + 1}`}
+                src={`/static/.jpg`}
+                sx={{
+                  width: 64,
+                  height: 64,
+                  border: "2px solid #e1306c",
+                  cursor: "pointer",
+                }}
+              />
+            </Box>
+          ))}
+        </Box>
+        <Box className={styles["posts"]}>
+          {posts?.rows?.map((post) => {
+            const likes = allPostLikes.filter(
+              (like) => like?.like?.postId === post?.id
+            );
+            return (
+              <Post
+                key={post.id}
+                post={post}
+                initialLikes={likes[0]?.like}
+              />
+            );
+          })}
+        </Box>
 
-      <Box className={styles["posts"]}>
-        {posts?.rows?.map((post) => {
-          const likes = allPostLikes.filter(
-            (like) => like?.like?.postId === post?.id
-          );
-          console.log("✌️likes ddd--->", likes);
-          return <Post key={post.id} post={post} likes={likes}></Post>;
-        })}
-      </Box>
+      </InfiniteScroll>
 
       <Box className={styles["footer"]}>
         <IconButton>
@@ -123,7 +157,6 @@ const Home = () => {
           />
         </IconButton>
       </Box>
-
       <CreatePostModal
         open={openCreateModal}
         onClose={handleCloseCreateModal}

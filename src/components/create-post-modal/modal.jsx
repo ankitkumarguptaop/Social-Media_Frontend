@@ -34,7 +34,6 @@ const postModal = ({ open, onClose }) => {
     });
 
     dispatch(createPost(formdata));
-    console.log("✌️formdata --->", formdata);
     onClose();
   };
 

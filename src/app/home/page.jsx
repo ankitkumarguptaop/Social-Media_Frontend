@@ -1,13 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import styles from "./home.module.css";
-import {
-  Avatar,
-  Box,
-  IconButton,
-  Typography,
-  Fab,
-} from "@mui/material";
+import { Avatar, Box, IconButton, Typography, Fab } from "@mui/material";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import CameraAltIcon from "@mui/icons-material/CameraAlt";
 import TvIcon from "@mui/icons-material/Tv";
@@ -22,6 +16,7 @@ const Home = () => {
   const dispatch = useDispatch();
   const posts = useSelector((state) => state.post.posts);
   const currentUser = useSelector((state) => state.auth.currentUser);
+  console.log("✌️currentUser --->", currentUser);
   const allPostLikes = useSelector((state) => state.like.postLikes);
 
   const [profilePicture, setProfilePicture] = useState(
@@ -34,7 +29,7 @@ const Home = () => {
   const [page, setPage] = useState(1);
   const [limit] = useState(2);
   const [hasMore, setHasMore] = useState(true);
-  console.log('✌️hasMore --->', hasMore);
+  console.log("✌️hasMore --->", hasMore);
 
   useEffect(() => {
     fetchMoreData();
@@ -47,16 +42,14 @@ const Home = () => {
       }
     });
 
-    setPage(prev => prev + 1);
+    setPage((prev) => prev + 1);
   };
 
   const handleOpenCreateModal = () => setOpenCreateModal(true);
   const handleCloseCreateModal = () => setOpenCreateModal(false);
 
   return (
-
     <Box className={styles["home-container"]}>
-      {/* Header */}
       <Box className={styles["header"]}>
         <IconButton>
           <CameraAltIcon />
@@ -78,22 +71,30 @@ const Home = () => {
         dataLength={posts?.rows?.length || 0}
         next={fetchMoreData}
         hasMore={hasMore}
-        loader={<Box style={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          marginTop: '16px'
-        }}>
-          Loading more posts...
-        </Box>}
-        endMessage={<Box style={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          marginTop: '16px'
-        }}>
-          No more posts to show
-        </Box>}
+        loader={
+          <Box
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              marginTop: "16px",
+            }}
+          >
+            Loading more posts...
+          </Box>
+        }
+        endMessage={
+          <Box
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              marginTop: "16px",
+            }}
+          >
+            No more posts to show
+          </Box>
+        }
       >
         <Box className={styles["avatars"]}>
           {[...Array(10)].map((_, index) => (
@@ -117,15 +118,10 @@ const Home = () => {
               (like) => like?.like?.postId === post?.id
             );
             return (
-              <Post
-                key={post.id}
-                post={post}
-                initialLikes={likes[0]?.like}
-              />
+              <Post key={post.id} post={post} initialLikes={likes[0]?.like} />
             );
           })}
         </Box>
-
       </InfiniteScroll>
 
       <Box className={styles["footer"]}>

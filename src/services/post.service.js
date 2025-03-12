@@ -10,7 +10,7 @@ export const listPostService = async (payload) => {
   );
 };
 
-export const listUserPostService = async () => {
+export const listUserPostService = async (payload) => {
   const { limit = 5, page = 1 } = payload;
   return await axios.get(
     `${process.env.NEXT_PUBLIC_BACKEND_URL}/posts/users?page=${page}&limit=${limit}`,
@@ -30,7 +30,8 @@ export const createPostService = async (payload) => {
   );
 };
 
-export const deletePostService = async (postId) => {
+export const deletePostService = async (payload) => {
+  const { postId } = payload;
   return await axios.delete(
     `${process.env.NEXT_PUBLIC_BACKEND_URL}/posts/${postId}`,
     {
@@ -39,7 +40,8 @@ export const deletePostService = async (postId) => {
   );
 };
 
-export const updatePostService = async (payload, postId) => {
+export const updatePostService = async (payload) => {
+  const { postId } = payload;
   return await axios.patch(
     `${process.env.NEXT_PUBLIC_BACKEND_URL}/posts/${postId}`,
     payload,

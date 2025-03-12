@@ -1,18 +1,18 @@
 import axios from "axios";
 
-export const addLikeOnPostService = async (data) => {
-  const { postId } = data;
+export const addLikeOnPostService = async (payload) => {
+  const { postId } = payload;
   return await axios.post(
     `${process.env.NEXT_PUBLIC_BACKEND_URL}/likes/posts/${postId}`,
-    data,
+    payload,
     {
       withCredentials: true,
     }
   );
 };
 
-export const removeLikeOnPostService = async (data) => {
-  const { postId } = data;
+export const removeLikeOnPostService = async (payload) => {
+  const { postId } = payload;
   return await axios.delete(
     `${process.env.NEXT_PUBLIC_BACKEND_URL}/likes/posts/${postId}`,
     {
@@ -21,19 +21,19 @@ export const removeLikeOnPostService = async (data) => {
   );
 };
 
-export const addLikeOnCommentService = async (data) => {
-  const { commentId } = data;
+export const addLikeOnCommentService = async (payload) => {
+  const { commentId } = payload;
   return await axios.post(
     `${process.env.NEXT_PUBLIC_BACKEND_URL}/likes/comments/${commentId}`,
-    data,
+    payload,
     {
       withCredentials: true,
     }
   );
 };
 
-export const removeLikeOnCommentService = async (data) => {
-  const { commentId } = data;
+export const removeLikeOnCommentService = async (payload) => {
+  const { commentId } = payload;
   return await axios.delete(
     `${process.env.NEXT_PUBLIC_BACKEND_URL}/likes/comments/${commentId}`,
     {
@@ -42,19 +42,18 @@ export const removeLikeOnCommentService = async (data) => {
   );
 };
 
-export const listCommentLikeService = async (data) => {
+export const listCommentLikeService = async (payload) => {
   const { postId } = data;
   return await axios.get(
     `${process.env.NEXT_PUBLIC_BACKEND_URL}/likes/comments/${postId}`,
-
     {
       withCredentials: true,
     }
   );
 };
 
-export const listPostLikeService = async (data) => {
-  const { postId } = data;
+export const listPostLikeService = async (payload) => {
+  const { postId } = payload;
   return await axios.get(
     `${process.env.NEXT_PUBLIC_BACKEND_URL}/likes/posts/${postId}`,
     {

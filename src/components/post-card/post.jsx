@@ -9,10 +9,12 @@ import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlin
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import MapsUgcOutlinedIcon from "@mui/icons-material/MapsUgcOutlined";
 import SendOutlinedIcon from "@mui/icons-material/SendOutlined";
-import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { addlikeOnPost, removePostLike } from "@/features/like/like.action";
 import { Avatar, Box, TextField, Typography } from '@mui/material'
 import Comment from '../comment/comment'
+import CommentModal from '../comment-modal/comment-modal'
+import PostCarousel from '../post-carousel/post'
+import { listCommentOnPost } from '@/features/comment/comment.action'
 
 
 const Post = ({ post, initialLikes }) => {
@@ -25,7 +27,7 @@ const Post = ({ post, initialLikes }) => {
       .replace(/\\/g, "/")
   );
   const [likes, setLikes] = useState(initialLikes || [])
-  const [isOpenComment, setIsOpenComment] = useState(false)
+  const [isOpenCommentModal, setIsOpenCommentModal] = useState(false)
 
 
   const handleLike = async () => {
@@ -63,6 +65,7 @@ const Post = ({ post, initialLikes }) => {
   useEffect(() => {
     setLikes(initialLikes)
     dispatch(listPostLike({ postId: post.id }))
+
   }, [initialLikes])
 
 
@@ -77,24 +80,7 @@ const Post = ({ post, initialLikes }) => {
           />
           <Typography fontWeight="bold">{post?.user?.name}</Typography>
         </Box>
-        <Carousel showArrows={true}>
-          {post?.images.map((image) => (
-            <Box
-              display={"flex"}
-              key={image.id}
-              component="img"
-              src={`${process.env.NEXT_PUBLIC_BACKEND_URL
-                }/${image.image_url.replace(/\\/g, "/")}`}
-              alt="Post"
-              sx={{
-                width: "100%",
-                height: 400,
-                objectFit: "cover",
-                marginTop: 1,
-              }}
-            />
-          ))}
-        </Carousel>
+       <PostCarousel post={post} height={400}></PostCarousel>
         <Box className={styles["post-interaction"]}>
           <Box
             sx={{
@@ -116,7 +102,7 @@ const Post = ({ post, initialLikes }) => {
               />
             )}
             <Typography>{likes?.count}</Typography>
-            <MapsUgcOutlinedIcon cursor="pointer" onClick={() => setIsOpenComment(!isOpenComment)}></MapsUgcOutlinedIcon>
+            <MapsUgcOutlinedIcon cursor="pointer" onClick={() => setIsOpenCommentModal(!isOpenCommentModal)}></MapsUgcOutlinedIcon>
           </Box>
           <SendOutlinedIcon cursor="pointer"></SendOutlinedIcon>
         </Box>
@@ -129,13 +115,14 @@ const Post = ({ post, initialLikes }) => {
           </Typography>
         </Box>
         <TextField sx={{ width: '100%', marginBottom: "20px" }} id="standard-basic" label="Add a Comment..." variant="standard" />
-        {isOpenComment && <Box>
+        {false && <Box>
           {comments.map((comment) => (
             <Comment key={comment.id} comment={comment} />
           ))}
         </Box>}
 
       </Box>
+      <CommentModal post={post} open={isOpenCommentModal}  onClose={setIsOpenCommentModal}> </CommentModal>
     </>
   )
 }

@@ -1,10 +1,11 @@
 import React, { useState } from "react";
-import { Avatar, IconButton, Typography } from "@mui/material";
+import { Avatar, Box, IconButton, Typography } from "@mui/material";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import styles from "./comment.module.css";
 
 const Comment = ({ comment }) => {
+  console.log("✌️comment --->", comment);
   const [liked, setLiked] = useState(false);
 
   const handleLike = () => {
@@ -12,17 +13,23 @@ const Comment = ({ comment }) => {
   };
 
   return (
-    <div className={styles["comment-container"]}>
+    <Box className={styles["comment-container"]}>
       <Avatar
-        src={comment.userAvatar}
-        alt={comment.userName}
+        src={`${
+          process.env.NEXT_PUBLIC_BACKEND_URL
+        }/${comment?.user?.images[0]?.image_url?.replace(/\\/g, "/")}`}
+        alt={comment?.user?.name}
         className={styles["user-avatar"]}
       />
 
-      <div className={styles["comment-details"]}>
-        <Typography className={styles["user-name"]}>{comment.userName}</Typography>
-        <Typography className={styles["comment-text"]}>{comment.text}</Typography>
-      </div>
+      <Box className={styles["comment-details"]}>
+        <Typography className={styles["user-name"]}>
+          {comment?.user?.name}
+        </Typography>
+        <Typography className={styles["comment-text"]}>
+          {comment?.content}
+        </Typography>
+      </Box>
 
       <IconButton onClick={handleLike} className={styles["like-button"]}>
         {liked ? (
@@ -31,7 +38,7 @@ const Comment = ({ comment }) => {
           <FavoriteBorderIcon className={styles["unliked-icon"]} />
         )}
       </IconButton>
-    </div>
+    </Box>
   );
 };
 

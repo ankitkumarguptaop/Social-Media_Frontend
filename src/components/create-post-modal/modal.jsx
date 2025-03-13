@@ -25,8 +25,6 @@ const postModal = ({ open, onClose }) => {
   });
 
   const onSubmit = (data) => {
-    console.log(data.postImages["0"]);
-
     let formdata = new FormData();
     formdata.append("caption", data.caption);
     Array.from(data.postImages).forEach((file) => {

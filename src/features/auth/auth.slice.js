@@ -3,6 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import { signInUser, signUpUser } from "./auth.action";
 
 import Cookies from "js-cookie";
+import { enqueueSnackbar } from "notistack";
 
 const initialState = {
   currentUser: null,
@@ -28,9 +29,17 @@ export const authUserSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(signUpUser.fulfilled, (state, action) => {
+        enqueueSnackbar("Sucessfuly Signed in", {
+          variant: "success",
+          autoHideDuration: 5000,
+        });
         state.isLoading = false;
       })
       .addCase(signUpUser.rejected, (state, action) => {
+        enqueueSnackbar(action.error.message, {
+          variant: "error",
+          autoHideDuration: 5000,
+        });
         state.isLoading = false;
         state.error = action.error.message;
       })
@@ -46,6 +55,10 @@ export const authUserSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(signInUser.rejected, (state, action) => {
+        enqueueSnackbar(action.error.message, {
+          variant: "error",
+          autoHideDuration: 5000,
+        });
         state.isLoading = false;
         state.error = action.error.message;
       });

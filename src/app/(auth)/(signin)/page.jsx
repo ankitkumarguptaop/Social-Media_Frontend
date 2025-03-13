@@ -13,7 +13,7 @@ import { redirect } from "next/navigation";
 import facebook from "../../../assets/images/Icon.png";
 import Image from "next/image";
 import Link from "next/link";
-
+import { SnackbarProvider, enqueueSnackbar } from 'notistack';
 const SignIn = () => {
   const formSchema = z.object({
     password: z
@@ -27,12 +27,9 @@ const SignIn = () => {
   });
   const dispatch = useDispatch();
   const {
-    control,
-    getValues,
-    setError,
     register,
     handleSubmit,
-    formState: { errors, isSubmitting, isDirty },
+    formState: { errors },
     reset,
   } = useForm({
     resolver: zodResolver(formSchema),
@@ -43,14 +40,18 @@ const SignIn = () => {
   });
 
   const onSubmit = async (data) => {
-    console.log(data);
-   dispatch(
-      signInUser({ email: data.email, password: data.password })
-    ).then((res) => {
-      if (res.meta.requestStatus === "fulfilled") {
-        redirect("/home");
+    dispatch(signInUser({ email: data.email, password: data.password })).then(
+      (res) => {
+        if (res.meta.requestStatus === "fulfilled") {
+          enqueueSnackbar("Sucessfuly Loged in" ,{
+            variant: "success",
+            autoHideDuration: 5000,
+     
+        })
+          redirect("/home");
+        }
       }
-    });
+    );
     reset();
   };
 

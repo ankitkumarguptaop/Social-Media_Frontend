@@ -11,6 +11,7 @@ import {
 
 const initialState = {
   postLikes: [],
+  commentLikes:[],
   isLoading: false,
   error: null,
 };
@@ -50,6 +51,7 @@ export const likeSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(listCommentLike.fulfilled, (state, action) => {
+        // state.commentLikes=[...state.commentLikes ,  action.payload]
         state.isLoading = false;
       })
       .addCase(listCommentLike.rejected, (state, action) => {

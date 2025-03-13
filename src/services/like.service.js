@@ -43,9 +43,9 @@ export const removeLikeOnCommentService = async (payload) => {
 };
 
 export const listCommentLikeService = async (payload) => {
-  const { postId } = data;
+  const { commentId } = payload;
   return await axios.get(
-    `${process.env.NEXT_PUBLIC_BACKEND_URL}/likes/comments/${postId}`,
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/likes/comments/${commentId}`,
     {
       withCredentials: true,
     }

@@ -16,7 +16,6 @@ const Home = () => {
   const dispatch = useDispatch();
   const posts = useSelector((state) => state.post.posts);
   const currentUser = useSelector((state) => state.auth.currentUser);
-  console.log("✌️currentUser --->", currentUser);
   const allPostLikes = useSelector((state) => state.like.postLikes);
 
   const [profilePicture, setProfilePicture] = useState(
@@ -29,7 +28,6 @@ const Home = () => {
   const [page, setPage] = useState(1);
   const [limit] = useState(2);
   const [hasMore, setHasMore] = useState(true);
-  console.log("✌️hasMore --->", hasMore);
 
   useEffect(() => {
     fetchMoreData();

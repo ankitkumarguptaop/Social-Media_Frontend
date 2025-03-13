@@ -13,9 +13,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { setReplyState, setReplyTo } from "@/features/comment/comment.slice";
 import { listCommentOnComment } from "@/features/comment/comment.action";
 import InfiniteScroll from "react-infinite-scroll-component";
-import ChildComment from "../child-comment/comment"
 
-const Comment = ({ comment, inputRef }) => {
+const ChildComment = ({ comment, inputRef }) => {
   const currentUser = useSelector((state) => state.auth.currentUser);
 
   const dispatch = useDispatch();
@@ -24,7 +23,6 @@ const Comment = ({ comment, inputRef }) => {
   const [page, setPage] = useState(1);
   const [limit] = useState(5);
   const [hasMore, setHasMore] = useState(true);
-  const [isViewReply, setIsViewReply] = useState(false);
 
   const handleLike = async () => {
     const isLiked = totalLiked?.rows?.some(
@@ -93,7 +91,7 @@ const Comment = ({ comment, inputRef }) => {
             {comment?.user?.name}
           </Typography>
           <Typography
-            sx={{ fontSize: "12px" }}
+            sx={{ fontSize: "10px" }}
             className={styles["comment-text"]}
           >
             {comment?.content}
@@ -110,89 +108,32 @@ const Comment = ({ comment, inputRef }) => {
           )}
         </IconButton>
       </Box>
-      <Box sx={{ display: "flex" }}>
+      <Box sx={{ display: "flex"  ,    paddingLeft: "50px"}}>
         <Typography
-          sx={{ fontSize: "12px", padding: "3px 10px", color: "grey" }}
+          sx={{ fontSize: "10px", padding: "3px 10px", color: "grey" }}
         >
           {totalLiked?.count || 0} likes{" "}
         </Typography>
         <Typography
           sx={{
-            fontSize: "12px",
+            fontSize: "10px",
             color: "grey",
             padding: "3px 10px",
             cursor: "pointer",
           }}
           onClick={() => {
             shiftFocus();
-            dispatch(setReplyTo(comment.id));
+            dispatch(setReplyTo(comment.parent_comment_id));
           }}
         >
           Reply
         </Typography>{" "}
-{   thisCommentComment.length > 0 &&    <Typography
-          sx={{
-            fontSize: "12px",
-            color: "grey",
-            padding: "3px 10px",
-            cursor: "pointer",
-          }}
-          onClick={() => {
-           setIsViewReply(!isViewReply)
-          }}
-        >
-        { isViewReply ? "Close": " View replies"}
-        </Typography>}
+
         </Box>
-        { isViewReply && thisCommentComment.length > 0 && (
-          <InfiniteScroll
-            height={200}
-            scrollableTarget="infinite-div"
-            className={styles["infinite-scroll"]}
-            dataLength={thisCommentComment?.length}
-            next={fetchMoreData}
-            hasMore={hasMore}
-            loader={
-              <Box
-                sx={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  marginTop: "16px",
-                   fontSize:"11px"
-                }}
-              >
-                Loading more comments...
-              </Box>
-            }
-            endMessage={
-              <Box
-                sx={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  marginTop: "16px",
-                  fontSize:"11px"
-                }}
-              >
-                No more comment to show
-              </Box>
-            }
-          >
-            {thisCommentComment?.map((comment) => {
-              return (
-                <ChildComment
-                  key={comment.id}
-                  inputRef={inputRef}
-                  comment={comment}
-                />
-              );
-            })}
-          </InfiniteScroll>
-        )}
+
    
     </>
   );
 };
 
-export default Comment;
+export default ChildComment;

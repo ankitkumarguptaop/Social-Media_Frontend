@@ -8,10 +8,13 @@ import {
   addCommentOnComment,
   addCommentOnPost,
 } from "./comment.action";
+import { enqueueSnackbar } from "notistack";
 
 const initialState = {
   postComments: [],
   commmentComments: [],
+  replyState:false,
+  replyTo:false,
   isLoading: false,
   error: null,
 };
@@ -23,6 +26,12 @@ export const commentSlice = createSlice({
     removeError: (state, action) => {
       state.error = null;
     },
+    setReplyState: (state, action) => {
+      state.replyState = action.payload;
+    },
+    setReplyTo: (state, action) => {
+      state.replyTo = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -30,6 +39,10 @@ export const commentSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(addCommentOnComment.fulfilled, (state, action) => {
+        enqueueSnackbar("Comment Added Sucessfuly", {
+          variant: "success",
+          autoHideDuration: 5000,
+        });
         state.isLoading = false;
       })
       .addCase(addCommentOnComment.rejected, (state, action) => {
@@ -40,6 +53,10 @@ export const commentSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(addCommentOnPost.fulfilled, (state, action) => {
+        enqueueSnackbar("Comment Added Sucessfuly", {
+          variant: "success",
+          autoHideDuration: 5000,
+        });
         state.postComments = [...state.postComments, action.payload];
         state.isLoading = false;
       })
@@ -58,6 +75,10 @@ export const commentSlice = createSlice({
         state.error = action.error.message;
       })
       .addCase(deleteComment.pending, (state) => {
+        enqueueSnackbar("Comment deleted Sucessfuly", {
+          variant: "success",
+          autoHideDuration: 5000,
+        });
         state.isLoading = true;
       })
       .addCase(deleteComment.fulfilled, (state, action) => {
@@ -65,6 +86,10 @@ export const commentSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(deleteComment.rejected, (state, action) => {
+          enqueueSnackbar(action.error.message, {
+                  variant: "error",
+                  autoHideDuration: 5000,
+                });
         state.isLoading = false;
         state.error = action.error.message;
       })
@@ -92,6 +117,6 @@ export const commentSlice = createSlice({
   },
 });
 
-export const { removeError } = commentSlice.actions;
+export const { removeError  ,setReplyState ,setReplyTo}  = commentSlice.actions;
 
 export default commentSlice.reducer;

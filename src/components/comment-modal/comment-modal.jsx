@@ -1,5 +1,6 @@
 "use client";
 import {
+  Avatar,
   Box,
   Button,
   IconButton,
@@ -8,45 +9,35 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import CloseIcon from "@mui/icons-material/Close";
 import PostCarousel from "../post-carousel/post";
 import { useDispatch, useSelector } from "react-redux";
 import SentimentSatisfiedRoundedIcon from "@mui/icons-material/SentimentSatisfiedRounded";
 import {
+  addCommentOnComment,
   addCommentOnPost,
   listCommentOnPost,
 } from "@/features/comment/comment.action";
 import InfiniteScroll from "react-infinite-scroll-component";
 import styled from "./comment-modal.module.css";
 import Comment from "../comment/comment";
+import { setReplyState } from "@/features/comment/comment.slice";
 
 const CommentModal = ({ open, onClose, post }) => {
   const dispatch = useDispatch();
+  const inputRef = useRef(null);
 
   const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(10);
+  const [limit] = useState(10);
   const [content, setContent] = useState("");
   const [hasMore, setHasMore] = useState(true);
-  const [thisPostComments, setThidsPostComment] = useState([]);
+  const [thisPostComments, setThisPostComment] = useState([]);
+
+
   const currentUser = useSelector((state) => state.auth.currentUser);
-
-  console.log("✌️thisPostComments --->", thisPostComments);
-
-  const fetchMoreData = async () => {
-    dispatch(listCommentOnPost({ page, limit, postId: post.id })).then(
-      (result) => {
-        setThidsPostComment([
-          ...thisPostComments,
-          ...result.payload.comment.rows,
-        ]);
-        if (result?.payload?.comment?.rows?.length < limit) {
-          setHasMore(false);
-        }
-      }
-    );
-    setPage((prev) => prev + 1);
-  };
+  const replyState = useSelector((state) => state.comment.replyState);
+  const replyTo = useSelector((state) => state.comment.replyTo);
 
   const commentOnPost = async () => {
     dispatch(addCommentOnPost({ postId: post.id, content: content })).then(
@@ -58,7 +49,27 @@ const CommentModal = ({ open, onClose, post }) => {
             name: currentUser?.user?.name,
           },
         };
-        setThidsPostComment([...thisPostComments, data]);
+        setThisPostComment([...thisPostComments, data]);
+
+        if (result?.payload?.comment?.rows?.length < limit) {
+          setHasMore(false);
+        }
+      }
+    );
+  };
+
+
+  const commentOnComment = async () => {
+    dispatch(addCommentOnComment({ commentId: replyTo, content: content })).then(
+      (result) => {
+        const data = {
+          ...result.payload.comment,
+          user: {
+            images: [{ image_url: currentUser?.profileImage?.image_url }],
+            name: currentUser?.user?.name,
+          },
+        };
+        // setThisCommentComment([...thisCommentComment, data]);
 
         if (result?.payload?.comment?.rows?.length < limit) {
           setHasMore(false);
@@ -70,6 +81,21 @@ const CommentModal = ({ open, onClose, post }) => {
   useEffect(() => {
     fetchMoreData();
   }, []);
+
+  const fetchMoreData = async () => {
+    dispatch(listCommentOnPost({ page, limit, postId: post.id })).then(
+      (result) => {
+        setThisPostComment([
+          ...thisPostComments,
+          ...result.payload.comment.rows,
+        ]);
+        if (result?.payload?.comment?.rows?.length < limit) {
+          setHasMore(false);
+        }
+      }
+    );
+    setPage((prev) => prev + 1);
+  };
 
   return (
     <Modal open={open} onClose={() => onClose(false)}>
@@ -113,19 +139,36 @@ const CommentModal = ({ open, onClose, post }) => {
               display: "flex",
               flexDirection: "row",
               height: "700px",
-              width: "80vw",
+              margin: "0px 120px",
               backgroundColor: "white",
             }}
           >
-            <Box sx={{ width: "60%", height: "100%" }}>
+            <Box sx={{ width: "60%", height: "700px" }}>
               <PostCarousel height={700} post={post} />
             </Box>
-            <Box sx={{ width: "40%", height: "100%" }}>
-           
-              <Box className={styled["comment-header"]}></Box>
-              <Box >
+            <Box sx={{ width: "40%", height: "700px" }} id="infinite-div">
+              <Box className={styled["comment-header"]}>
+                <Avatar
+                  src={`${
+                    process.env.NEXT_PUBLIC_BACKEND_URL
+                  }/${post?.user?.images[0]?.image_url?.replace(
+                    /\\/g,
+                    "/"
+                  )}`}
+                  alt={post?.user?.name}
+                  className={styled["user-avatar"]}
+                />
+
+                <Typography sx={{ paddingLeft:"10px", fontSize:"13px"}} className={styled["user-name"]}>
+                  {post?.user?.name}
+                </Typography>
+              </Box>
+
               <InfiniteScroll
-                dataLength={thisPostComments?.length || 0}
+                height={580}
+                scrollableTarget="infinite-div"
+                className={styled["infinite-scroll"]}
+                dataLength={thisPostComments?.length}
                 next={fetchMoreData}
                 hasMore={hasMore}
                 loader={
@@ -137,7 +180,7 @@ const CommentModal = ({ open, onClose, post }) => {
                       marginTop: "16px",
                     }}
                   >
-                    Loading more posts...
+                    Loading more comments...
                   </Box>
                 }
                 endMessage={
@@ -149,24 +192,33 @@ const CommentModal = ({ open, onClose, post }) => {
                       marginTop: "16px",
                     }}
                   >
-                    No more posts to show
+                    No more comment to show
                   </Box>
                 }
               >
                 {thisPostComments?.map((comment) => {
-                // const likes = allCommentLikes.filter(
-                //   (like) => like?.like?.commentId === comment?.id
-                // );
-                return <Comment key={comment.id} comment={comment} />;
-              })}
+                  return (
+                    <Box key={comment.id} className={styled["comment"]}>
+                      <Comment inputRef={inputRef} comment={comment} />
+                    </Box>
+                  );
+                })}
               </InfiniteScroll>
-              </Box>
-              <Box className={styled["comment-footer"]} sx={{ width: "100%" }}>
+              <Box className={styled["comment-footer"]}>
                 <TextField
                   fullWidth
+                
+                  inputRef={inputRef}
                   value={content}
                   onChange={(e) => setContent(e.target.value)}
-                  sx={{ width: "100%", outline: "none" }}
+                  sx={{
+                    width: "100%",
+                    outline: "none",
+                    height: "60px",
+                    input: {
+                      height: "40px",
+                    },
+                  }}
                   id="standard-basic"
                   placeholder="Add a comment..."
                   variant="standard"
@@ -185,7 +237,29 @@ const CommentModal = ({ open, onClose, post }) => {
                       ),
                       endAdornment: (
                         <InputAdornment position="end">
-                          <Button onClick={() => commentOnPost()}>Post</Button>
+                          {!replyState ? (
+                            <Button
+                            disabled={content===""}
+                              onClick={() => {
+                              
+                                commentOnPost();
+                                setContent("");
+                              }}
+                            >
+                              Post
+                            </Button>
+                          ) : (
+                            <Button
+                            disabled={content===""}
+                              onClick={() => {
+                                commentOnComment();
+                                setContent("");
+                                dispatch(setReplyState(false));
+                              }}
+                            >
+                              Reply
+                            </Button>
+                          )}
                         </InputAdornment>
                       ),
                     },

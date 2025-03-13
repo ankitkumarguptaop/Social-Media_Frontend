@@ -5,8 +5,8 @@ import {
   updatePost,
   listPost,
   listUserPost,
-
 } from "./post.action";
+import { enqueueSnackbar } from "notistack";
 
 const initialState = {
   posts: [],
@@ -28,7 +28,15 @@ export const postSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(createPost.fulfilled, (state, action) => {
-        state.posts = [state.posts, action.payload];
+        state.posts = {
+          ...state.posts,
+          count: state.posts.count + 1,
+          rows: [...state.posts.rows, { ...action.payload.post, images: [] }],
+        };
+        enqueueSnackbar("Post Added Sucessfuly", {
+          variant: "success",
+          autoHideDuration: 5000,
+        });
         state.isLoading = false;
       })
       .addCase(createPost.rejected, (state, action) => {

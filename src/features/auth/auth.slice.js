@@ -4,6 +4,7 @@ import { signInUser, signUpUser } from "./auth.action";
 
 import Cookies from "js-cookie";
 import { enqueueSnackbar } from "notistack";
+import { socket } from "@/configs/socket";
 
 const initialState = {
   currentUser: null,
@@ -52,6 +53,8 @@ export const authUserSlice = createSlice({
           expires: 7,
           secure: true,
         });
+        
+        socket.connect();
         state.isLoading = false;
       })
       .addCase(signInUser.rejected, (state, action) => {

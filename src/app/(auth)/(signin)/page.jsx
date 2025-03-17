@@ -13,7 +13,7 @@ import { redirect } from "next/navigation";
 import facebook from "../../../assets/images/Icon.png";
 import Image from "next/image";
 import Link from "next/link";
-import { SnackbarProvider, enqueueSnackbar } from 'notistack';
+import { enqueueSnackbar } from "notistack";
 const SignIn = () => {
   const formSchema = z.object({
     password: z
@@ -43,11 +43,10 @@ const SignIn = () => {
     dispatch(signInUser({ email: data.email, password: data.password })).then(
       (res) => {
         if (res.meta.requestStatus === "fulfilled") {
-          enqueueSnackbar("Sucessfuly Loged in" ,{
+          enqueueSnackbar("Sucessfuly Loged in", {
             variant: "success",
             autoHideDuration: 5000,
-     
-        })
+          });
           redirect("/home");
         }
       }

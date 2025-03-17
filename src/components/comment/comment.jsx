@@ -13,7 +13,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setReplyState, setReplyTo } from "@/features/comment/comment.slice";
 import { listCommentOnComment } from "@/features/comment/comment.action";
 import InfiniteScroll from "react-infinite-scroll-component";
-import ChildComment from "../child-comment/comment"
+import ChildComment from "../child-comment/comment";
 
 const Comment = ({ comment, inputRef }) => {
   const currentUser = useSelector((state) => state.auth.currentUser);
@@ -130,67 +130,68 @@ const Comment = ({ comment, inputRef }) => {
         >
           Reply
         </Typography>{" "}
-{   thisCommentComment.length > 0 &&    <Typography
-          sx={{
-            fontSize: "12px",
-            color: "grey",
-            padding: "3px 10px",
-            cursor: "pointer",
-          }}
-          onClick={() => {
-           setIsViewReply(!isViewReply)
-          }}
-        >
-        { isViewReply ? "Close": " View replies"}
-        </Typography>}
-        </Box>
-        { isViewReply && thisCommentComment.length > 0 && (
-          <InfiniteScroll
-            height={200}
-            scrollableTarget="infinite-div"
-            className={styles["infinite-scroll"]}
-            dataLength={thisCommentComment?.length}
-            next={fetchMoreData}
-            hasMore={hasMore}
-            loader={
-              <Box
-                sx={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  marginTop: "16px",
-                   fontSize:"11px"
-                }}
-              >
-                Loading more comments...
-              </Box>
-            }
-            endMessage={
-              <Box
-                sx={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  marginTop: "16px",
-                  fontSize:"11px"
-                }}
-              >
-                No more comment to show
-              </Box>
-            }
+        {thisCommentComment.length > 0 && (
+          <Typography
+            sx={{
+              fontSize: "12px",
+              color: "grey",
+              padding: "3px 10px",
+              cursor: "pointer",
+            }}
+            onClick={() => {
+              setIsViewReply(!isViewReply);
+            }}
           >
-            {thisCommentComment?.map((comment) => {
-              return (
-                <ChildComment
-                  key={comment.id}
-                  inputRef={inputRef}
-                  comment={comment}
-                />
-              );
-            })}
-          </InfiniteScroll>
+            {isViewReply ? "Close" : " View replies"}
+          </Typography>
         )}
-   
+      </Box>
+      {isViewReply && thisCommentComment.length > 0 && (
+        <InfiniteScroll
+          height={200}
+          scrollableTarget="infinite-div"
+          className={styles["infinite-scroll"]}
+          dataLength={thisCommentComment?.length}
+          next={fetchMoreData}
+          hasMore={hasMore}
+          loader={
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                marginTop: "16px",
+                fontSize: "11px",
+              }}
+            >
+              Loading more comments...
+            </Box>
+          }
+          endMessage={
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                marginTop: "16px",
+                fontSize: "11px",
+              }}
+            >
+              No more comment to show
+            </Box>
+          }
+        >
+          {thisCommentComment?.map((comment) => {
+            return (
+              <ChildComment
+                key={comment.id}
+                inputRef={inputRef}
+                comment={comment}
+              />
+            );
+          })}
+        </InfiniteScroll>
+      )}
     </>
   );
 };

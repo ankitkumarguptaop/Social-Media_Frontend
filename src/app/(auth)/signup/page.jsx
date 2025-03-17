@@ -46,7 +46,6 @@ const SignUp = () => {
   });
 
   const onSubmit = async (data) => {
-
     let formdata = new FormData();
     formdata.append("name", data.name);
     formdata.append("password", data.password);

@@ -18,6 +18,9 @@ export const messageSlice = createSlice({
     removeError: (state, action) => {
       state.error = null;
     },
+    addNewMessage: (state, action) => {
+      state.messages=[...state.messages , action.payload];
+    }
 
   },
   extraReducers: (builder) => {
@@ -26,9 +29,10 @@ export const messageSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(createMessage.fulfilled, (state, action) => {
+        console.log('✌️action --->' , JSON.stringify(action.payload));
         socket.emit("message-sender", {
-          room: action.payload.data.room ,
-          message: action.payload.data.message,
+          room: action.payload.messages.room_id ,
+          message: action.payload.messages,
         });
         state.isLoading = false;
       })
@@ -50,6 +54,6 @@ export const messageSlice = createSlice({
   },
 });
 
-export const { removeError } = messageSlice.actions;
+export const { removeError , addNewMessage} = messageSlice.actions;
 
 export default messageSlice.reducer;

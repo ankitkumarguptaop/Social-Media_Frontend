@@ -12,7 +12,7 @@ export const listMessageService = async (payload) => {
 
 export const createMessageService = async (payload) =>{
   const { chatId } = payload;
-  await axios.post(
+  return await axios.post(
     `${process.env.NEXT_PUBLIC_BACKEND_URL}/messages/chats/${chatId}`,
     payload,
     {

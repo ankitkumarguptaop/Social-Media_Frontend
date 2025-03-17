@@ -14,6 +14,7 @@ import SentimentSatisfiedRoundedIcon from "@mui/icons-material/SentimentSatisfie
 import { createMessage, listMessage } from "@/features/message/message.action";
 import { useDispatch, useSelector } from "react-redux";
 import { socket } from "@/configs/socket";
+import { addNewMessage } from "@/features/message/message.slice";
 
 const MessageBox = ({ selectedChat, currentChatUser }) => {
   console.log("✌️currentChatUser --->", currentChatUser);
@@ -22,14 +23,21 @@ const MessageBox = ({ selectedChat, currentChatUser }) => {
   console.log("✌️selectedChat --->", selectedChat);
 
   const messages = useSelector((state) => state.message.messages);
+console.log('✌️messages --->', messages);
 
   const dispatch = useDispatch();
   const [content, setContent] = useState("");
 
+   useEffect(() => {
+      socket.on("message-reciever", (message) => {
+        if(message.room_id===selectedChat.id){
+          dispatch(addNewMessage(message));
+        }
+      })
+    }, []);
   useEffect(() => {
     dispatch(listMessage({ chatId: selectedChat.id }));
-    
-  }, []);
+  }, [selectedChat]);
 
   return (
     <Box className={style["message-container"]}>

@@ -1,11 +1,13 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import style from "./message.module.css";
 import { Box, Typography } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { createChat, listChat } from "@/features/chat/chat.action";
 import ChatCard from "@/components/chat-card/chat";
 import MessageBox from "@/components/message-box/message";
+import { addNewMessage } from "@/features/message/message.slice";
+import { socket } from "@/configs/socket";
 const Message = () => {
   const dispatch = useDispatch();
   const chats = useSelector((state) => state.chat.chats);
@@ -13,13 +15,19 @@ const Message = () => {
   const currentUser = useSelector((state) => state.auth.currentUser);
 
 
-  const [currentChatUser ,setCurrentChatUser ] =useState(null)
+  const [currentChatUser, setCurrentChatUser] = useState(null)
   console.log("✌️currentUser --->", currentUser);
   console.log("✌️selectedChat --->", selectedChat);
   console.log("✌️chats --->", chats);
 
+
+
+
+ 
+
   useEffect(() => {
     dispatch(listChat());
+
   }, []);
   return (
     <Box className={style["message-container"]}>
@@ -49,7 +57,7 @@ const Message = () => {
           })}
       </Box>
       <Box className={style["right-container"]}>
-        {selectedChat && <MessageBox selectedChat={selectedChat}  currentChatUser={currentChatUser}></MessageBox>}
+        {selectedChat && <MessageBox selectedChat={selectedChat} currentChatUser={currentChatUser}></MessageBox>}
       </Box>
     </Box>
   );

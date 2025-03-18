@@ -9,50 +9,63 @@
   align-items: center;
   width: 100%;
   height: 70px;
-  border-bottom: 1px solid black;
+  border-bottom: 1px solid #cecece;
+  /* div {
+    margin: 0px 15px;
+  } */
 }
 
-.message-content{
-    width: 100%;
-    height: 86%;
-    background-color: rgb(255, 255, 255);
+.message-content {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 85%;
+  overflow-y: scroll;
+  background-color: rgb(255, 255, 255);
 }
 
-.input-box{
-  position: -webkit-sticky;
-    position: sticky;
-    bottom: 0;
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.input-box {
+  position: sticky;
+  bottom: 0;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.single-message{
-  height: 40px;
-  margin:5px 0px;
+.single-message {
+  /* text-align: justify; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: auto;
+  align-items: center;
 }
 
-.sender-message{
-  position:absolute;
-  right:10px;
+.sender-message {
+  margin: 10px;
+  align-self: flex-end;
+  padding: 5px;
+  display: flex;
+  max-width: 60%;
   background-color: #3797f0;
   color: #ffffff;
-  border-radius: "50px";
-  height: "30px";
-  padding:"5px";
-  margin:"2px 0px";
-
+  border-radius: 20px;
 }
 
-.reciever-message{
-  position:absolute;
-  left:10px;
-  background-color: #EFEFEF;
-  color: rgb(0, 0, 0);
-  border-radius: "50px";
-  height: "30px";
-  padding:"5px";
-  margin:"2px 0px";
+.reciever-message {
+  margin: 5px 12px;
+  align-self: flex-start;
+  display: flex;
+  max-width: 60%;
+  padding: 5px;
 
+  background-color: #efefef;
+  color: rgb(0, 0, 0);
+  border-radius: 20px;
+}
+
+
+.input-textfeild .MuiOutlinedInput-root {
+  border-radius: 89px;
 }

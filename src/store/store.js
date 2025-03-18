@@ -1,5 +1,4 @@
 import { configureStore } from "@reduxjs/toolkit";
-
 import authReducer from "../features/auth/auth.slice";
 import postReducer from "../features/post/post.slice";
 import likeReducer from "../features/like/like.slice";

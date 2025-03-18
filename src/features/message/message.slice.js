@@ -20,8 +20,7 @@ export const messageSlice = createSlice({
     },
     addNewMessage: (state, action) => {
       state.messages=[...state.messages , action.payload];
-    }
-
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -54,6 +53,6 @@ export const messageSlice = createSlice({
   },
 });
 
-export const { removeError , addNewMessage} = messageSlice.actions;
+export const { removeError , addNewMessage } = messageSlice.actions;
 
 export default messageSlice.reducer;

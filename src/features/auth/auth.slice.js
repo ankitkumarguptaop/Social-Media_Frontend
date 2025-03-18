@@ -6,6 +6,8 @@ import Cookies from "js-cookie";
 import { enqueueSnackbar } from "notistack";
 import { socket } from "@/configs/socket";
 
+
+
 const initialState = {
   currentUser: null,
   isLoading: false,
@@ -21,7 +23,7 @@ export const authUserSlice = createSlice({
     },
     logout: (state, action) => {
       state.currentUser = null;
-      redirect("/");
+  
     },
   },
   extraReducers: (builder) => {
@@ -54,10 +56,14 @@ export const authUserSlice = createSlice({
           secure: true,
         });
         
-        socket.connect();
+        // socket.on("connect", () => {
+        //   console.log(socket.id); // x8WIv7-mJelg7on_ALbx
+        // });
+        socket.connect()
         state.isLoading = false;
       })
-      .addCase(signInUser.rejected, (state, action) => {
+      .addCase(signInUser.rejected, (state, action ) => {
+        console.log('✌️action --->', JSON.stringify(action));
         enqueueSnackbar(action.error.message, {
           variant: "error",
           autoHideDuration: 5000,

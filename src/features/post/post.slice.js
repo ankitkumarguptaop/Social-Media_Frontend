@@ -21,6 +21,9 @@ export const postSlice = createSlice({
     removeError: (state, action) => {
       state.error = null;
     },
+    removePosts :(state, action)=>{
+      state.posts=[];
+    }
   },
   extraReducers: (builder) => {
     builder
@@ -57,7 +60,7 @@ export const postSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(listPost.fulfilled, (state, action) => {
-        if (state.posts?.rows) {
+        if (state.posts?.rows ) {
           state.posts = {
             ...state.posts,
             rows: [...state.posts.rows, ...action.payload.post.rows],
@@ -95,6 +98,6 @@ export const postSlice = createSlice({
   },
 });
 
-export const { removeError } = postSlice.actions;
+export const { removeError ,removePosts} = postSlice.actions;
 
 export default postSlice.reducer;

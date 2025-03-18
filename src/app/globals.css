@@ -1,22 +1,21 @@
 /* @import "tailwindcss"; */
 
-
 body {
-margin: 0;
-padding: 0;
-
-}
-.carousel .thumbs-wrapper{
-    margin: 0px !important;
+  margin: 0;
+  padding: 0;
 }
 
-.infinite-scroll-component .comment-modal-module__y6WgsW__infinite-scroll ::-webkit-scrollbar{
-    display: none;
-
+.carousel .thumbs-wrapper {
+  margin: 0px !important;
 }
 
+.infinite-scroll-component
+  .comment-modal-module__y6WgsW__infinite-scroll
+  ::-webkit-scrollbar {
+  display: none;
+}
 
-.css-ukn3g9-MuiInputBase-root-MuiOutlinedInput-root{
-    border-radius: 100px !important;
-    padding: 10px !important;
+.css-ukn3g9-MuiInputBase-root-MuiOutlinedInput-root {
+  border-radius: 100px !important;
+  padding: 10px !important;
 }

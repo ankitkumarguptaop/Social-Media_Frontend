@@ -12,15 +12,17 @@ import Post from "@/components/post-card/post";
 import InfiniteScroll from "react-infinite-scroll-component";
 
 import SendIcon from "@mui/icons-material/Send";
+import { ClipLoader } from "react-spinners";
 
 
 const Home = () => {
   const dispatch = useDispatch();
   const posts = useSelector((state) => state.post.posts);
+  const isLoading = useSelector((state) => state.post.isLoading);
   const currentUser = useSelector((state) => state.auth.currentUser);
   const allPostLikes = useSelector((state) => state.like.postLikes);
 
-  const [profilePicture, setProfilePicture] = useState(
+  const [profilePicture] = useState(
     `${process.env.NEXT_PUBLIC_BACKEND_URL}/${currentUser?.profileImage?.image_url}`
       .replace(/ /g, "%20")
       .replace(/\\/g, "/")
@@ -114,15 +116,45 @@ const Home = () => {
           ))}
         </Box>
         <Box className={styles["posts"]}>
-          {posts?.rows?.map((post) => {
-            const likes = allPostLikes.filter(
-              (like) => like?.like?.postId === post?.id
-            );
-            return (
-              <Post key={post.id} post={post} initialLikes={likes[0]?.like} />
-            );
-          })}
+          {!isLoading ? (
+            posts?.rows?.length > 0 ? (
+              posts?.rows?.map((post) => {
+                const likes = allPostLikes.filter(
+                  (like) => like?.like?.postId === post?.id
+                );
+                return (
+                  <Post key={post.id} post={post} initialLikes={likes[0]?.like} />
+                );
+              })
+            ) : (
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  width: "100%",
+                  height: "400px",
+                  color: "#999",
+                  fontSize: "20px",
+                }}
+              >
+                No posts available
+              </Box>
+            )
+          ) : (
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                width: "100%",
+              }}
+            >
+              <ClipLoader />
+            </Box>
+          )}
         </Box>
+
       </InfiniteScroll>
 
       <Box className={styles["footer"]}>

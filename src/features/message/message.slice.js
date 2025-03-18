@@ -19,6 +19,7 @@ export const messageSlice = createSlice({
       state.error = null;
     },
     addNewMessage: (state, action) => {
+      isLoading: false,
       state.messages=[...state.messages , action.payload];
     },
   },

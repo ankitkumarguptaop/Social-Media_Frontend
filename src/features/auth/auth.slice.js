@@ -23,7 +23,7 @@ export const authUserSlice = createSlice({
     },
     logout: (state, action) => {
       state.currentUser = null;
-  
+      Cookies.remove('jwt');
     },
   },
   extraReducers: (builder) => {
@@ -55,14 +55,14 @@ export const authUserSlice = createSlice({
           expires: 7,
           secure: true,
         });
-        
+
         // socket.on("connect", () => {
         //   console.log(socket.id); // x8WIv7-mJelg7on_ALbx
         // });
         socket.connect()
         state.isLoading = false;
       })
-      .addCase(signInUser.rejected, (state, action ) => {
+      .addCase(signInUser.rejected, (state, action) => {
         console.log('✌️action --->', JSON.stringify(action));
         enqueueSnackbar(action.error.message, {
           variant: "error",

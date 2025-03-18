@@ -15,10 +15,9 @@ import SearchIcon from "@mui/icons-material/Search";
 import ExploreIcon from "@mui/icons-material/Explore";
 import MovieIcon from "@mui/icons-material/Movie";
 import SendIcon from "@mui/icons-material/Send";
-import { removePosts } from "@/features/post/post.slice";
 import { useDispatch } from "react-redux";
 import { logout } from "@/features/auth/auth.slice";
-import Link from "next/link";
+
 
 export default function RootLayout({ children }) {
   const dispatch = useDispatch();
@@ -80,9 +79,8 @@ export default function RootLayout({ children }) {
             <ChatBubbleOutlineIcon className={styles["icon"]} />
             <Typography className={styles["text"]}>Threads</Typography>
           </Box>
-          <Link
+          <a
             href={"/"}
-            passHref
             style={{
               color: "#000000",
               textTransform: "none",
@@ -91,12 +89,12 @@ export default function RootLayout({ children }) {
           >
             <Box
               className={styles["menu-item"]}
-              onClick={() => dispatch(logout())}
+              onClick={() => dispatch(logout() )}
             >
               <MenuIcon className={styles["icon"]} />
               <Typography className={styles["text"]}>Log out</Typography>
             </Box>
-          </Link>
+          </a>
         </Box>
       </Box>
 

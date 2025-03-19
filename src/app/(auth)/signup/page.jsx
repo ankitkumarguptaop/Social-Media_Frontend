@@ -13,6 +13,7 @@ import { redirect } from "next/navigation";
 import facebook from "../../../assets/images/Icon.png";
 import Image from "next/image";
 import Link from "next/link";
+import { enqueueSnackbar } from "notistack";
 
 const SignUp = () => {
   const formSchema = z.object({
@@ -24,7 +25,10 @@ const SignUp = () => {
         "Enter valid Password"
       ),
     email: z.string().email("Enter valid Email").min(1),
-    name: z.string().min(3, "Enter valid Name"),
+    name: z
+      .string()
+      .transform((value) => value.replace(/\s+/g, ""))
+      .pipe(z.string().min(3, "Enter valid Name")),
     profilePic: z.any(),
   });
   const dispatch = useDispatch();
@@ -52,9 +56,16 @@ const SignUp = () => {
     formdata.append("email", data.email);
     formdata.append("profilePic", data.profilePic);
 
-    dispatch(signUpUser(formdata));
+    const res = await dispatch(signUpUser(formdata));
+console.log('✌️res --->', res);
+    if (res.meta.requestStatus === "fulfilled") {
+      enqueueSnackbar("Sucessfuly Signed in", {
+        variant: "success",
+        autoHideDuration: 5000,
+      });
+      redirect("/");
+    }
     reset();
-    redirect("/");
   };
 
   const handleImageUpload = (e) => {

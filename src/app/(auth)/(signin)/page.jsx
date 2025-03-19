@@ -14,6 +14,7 @@ import facebook from "../../../assets/images/Icon.png";
 import Image from "next/image";
 import Link from "next/link";
 import { enqueueSnackbar } from "notistack";
+import { socket } from "@/configs/socket";
 const SignIn = () => {
   const formSchema = z.object({
     password: z
@@ -47,6 +48,7 @@ const SignIn = () => {
             variant: "success",
             autoHideDuration: 5000,
           });
+          socket.connect()
           redirect("/home");
         }
       }

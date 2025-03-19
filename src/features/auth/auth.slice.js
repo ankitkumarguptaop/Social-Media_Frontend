@@ -22,7 +22,6 @@ export const authUserSlice = createSlice({
       state.error = null;
     },
     logout: (state, action) => {
-      state.currentUser = null;
       Cookies.remove('jwt');
     },
   },
@@ -32,10 +31,6 @@ export const authUserSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(signUpUser.fulfilled, (state, action) => {
-        enqueueSnackbar("Sucessfuly Signed in", {
-          variant: "success",
-          autoHideDuration: 5000,
-        });
         state.isLoading = false;
       })
       .addCase(signUpUser.rejected, (state, action) => {
@@ -59,7 +54,7 @@ export const authUserSlice = createSlice({
         // socket.on("connect", () => {
         //   console.log(socket.id); // x8WIv7-mJelg7on_ALbx
         // });
-        socket.connect()
+       
         state.isLoading = false;
       })
       .addCase(signInUser.rejected, (state, action) => {

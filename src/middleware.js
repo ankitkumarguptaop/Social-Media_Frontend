@@ -6,7 +6,7 @@ export function middleware(request) {
   const { pathname } = request.nextUrl;
 console.log('✌️pathname --->', pathname);
 
-  if (!user && pathname !== '/') {
+  if (!user && pathname !== '/' && pathname !== '/signup' ) {
     return NextResponse.redirect(new URL('/', request.url));
   }
 

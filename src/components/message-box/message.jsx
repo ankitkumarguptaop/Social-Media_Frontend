@@ -125,7 +125,9 @@ const MessageBox = ({ selectedChat, currentChatUser }) => {
             );
           })
         ) : (
+          <Box sx={{display:"flex", alignItems:"center" ,justifyContent:"center" ,width:"100%"}}>
           <Typography>No Messages</Typography>
+          </Box>
         )}
       </Box> : <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center", width: "100%" }} ><ClipLoader /></Box>}
       <Box className={style["input-box"]}>
@@ -141,6 +143,7 @@ const MessageBox = ({ selectedChat, currentChatUser }) => {
             borderRadius: "50px",
             '& .MuiOutlinedInput-root': {
               borderRadius: '50px',
+              padding:"8px"
             }
           }}
           id="standard-basic"

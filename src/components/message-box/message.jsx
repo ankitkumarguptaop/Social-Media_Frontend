@@ -42,6 +42,7 @@ const MessageBox = ({ selectedChat, currentChatUser }) => {
 
         dispatch(addNewMessage(message));
     });
+   
   }, []);
 
   useEffect(() => {

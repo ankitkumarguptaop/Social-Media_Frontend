@@ -133,7 +133,7 @@ const Home = () => {
                   alignItems: "center",
                   justifyContent: "center",
                   width: "100%",
-                  height: "400px",
+                  height: "700px",
                   color: "#999",
                   fontSize: "20px",
                 }}

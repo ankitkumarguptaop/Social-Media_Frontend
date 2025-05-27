@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, current } from "@reduxjs/toolkit";
 import {
   createPost,
   deletePost,
@@ -9,6 +9,7 @@ import {
 import { enqueueSnackbar } from "notistack";
 
 const initialState = {
+  userPosts: [],
   posts: [],
   isLoading: false,
   error: null,
@@ -57,7 +58,6 @@ export const postSlice = createSlice({
         state.error = action.error.message;
       })
       .addCase(listPost.pending, (state) => {
-        state.isLoading = true;
       })
       .addCase(listPost.fulfilled, (state, action) => {
         if (state.posts?.rows ) {
@@ -68,18 +68,16 @@ export const postSlice = createSlice({
         } else {
           state.posts = action.payload.post;
         }
-        state.isLoading = false;
       })
       .addCase(listPost.rejected, (state, action) => {
-        state.isLoading = false;
         state.error = action.error.message;
       })
       .addCase(listUserPost.pending, (state) => {
         state.isLoading = true;
       })
       .addCase(listUserPost.fulfilled, (state, action) => {
+        state.userPosts= action.payload.post;
         state.isLoading = false;
-        state.posts = action.payload;
       })
       .addCase(listUserPost.rejected, (state, action) => {
         state.isLoading = false;

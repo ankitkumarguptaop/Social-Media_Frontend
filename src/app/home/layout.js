@@ -64,7 +64,8 @@ export default function RootLayout({ children }) {
             <AddBoxIcon className={styles["icon"]} />
             <Typography className={styles["text"]}>Create</Typography>
           </Box>
-          <Box className={styles["menu-item"]}>
+          <Box className={styles["menu-item"]} 
+            onClick={() => redirect("/home/profile")}>
             <AccountCircleIcon className={styles["icon"]} />
             <Typography className={styles["text"]}>Profile</Typography>
           </Box>

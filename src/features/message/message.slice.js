@@ -1,7 +1,6 @@
 "use client";
 import { createSlice } from "@reduxjs/toolkit";
 import { listMessage, createMessage } from "./message.action";
-import { enqueueSnackbar } from "notistack";
 import { socket } from "@/configs/socket";
 
 const initialState = {

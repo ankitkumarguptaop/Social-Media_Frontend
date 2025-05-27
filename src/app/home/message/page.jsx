@@ -13,9 +13,7 @@ const Message = () => {
   const currentUser = useSelector((state) => state.auth.currentUser);
 
   const [currentChatUser, setCurrentChatUser] = useState(null);
-  console.log("✌️currentUser --->", currentUser);
-  console.log("✌️selectedChat --->", selectedChat);
-  console.log("✌️chats --->", chats);
+
 
   useEffect(() => {
     dispatch(listChat());
